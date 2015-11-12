@@ -5,6 +5,9 @@
 /*完成二叉查找树*/
 /*2015.11.11*/
 
+/*完成哈希表*/
+/*2015.11.12*/
+
 #include "Search.h"
 
 void SuccessMessage(int key, int i){
@@ -336,4 +339,69 @@ int BST_Min(BiTree T){
 		p = p->lchild;
 	}
 	return p->data;
+}
+
+bool InitHashTable(HashTable* H){
+
+	if(!H){
+
+		return false;
+	}
+	else{
+
+		H->table = (int *)malloc(H->compacity*(sizeof(int)));
+		for (int i = 0; i < H->compacity; i++){
+
+			H->table[i] = NULLKEY;
+		}
+		return true;
+	}
+}
+
+int Hash(int key, int HashTable_Compacity){
+
+	return key % HashTable_Compacity;
+}
+
+bool Hash_Search(HashTable* H, int key, int* index){
+
+	*index = Hash(key, H->compacity);
+	while (H->table[*index] != key){
+	
+		(*index) = ((*index) + 1) % H->compacity;
+		if (H->table[*index] == NULLKEY || *index == Hash(key,H->compacity)){
+		
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Hash_Insert(HashTable* H, int key){
+
+	int p = Hash(key, H->compacity);
+	while (H->table[p] != NULLKEY){
+	
+		p = (p + 1) % H->compacity;
+		if (p == Hash(key, H->compacity)){
+
+			return false;
+		}
+	}
+	H->table[p] = key;
+	H->count++;
+	return true;
+}
+
+bool Hash_Delete(HashTable* H, int key){
+
+	int *index = NULL;
+	if (Hash_Search(H, key, index)){
+	
+		H->table[*index] == NULLKEY;
+		H->count--;
+		return true;
+	}
+	return false;
+	
 }
